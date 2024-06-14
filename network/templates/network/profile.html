@@ -1,0 +1,61 @@
+{% extends 'network/base_generic.html' %}
+
+{% block content %}
+    <h1>{{ profile.user.username }}'s Profile</h1>
+    <img src="{{ profile.image.url }}" alt="{{ profile.user.username }}'s profile picture"
+         style="width:150px; height:150px;">
+    <p>{{ profile.bio }}</p>
+    <p>{{ profile.location }}</p>
+    <p>{{ profile.birth_date }}</p>
+
+    {% if is_own_profile %}
+        <h2>Update Profile</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Update</button>
+        </form>
+
+        <h2>Friend Requests</h2>
+        {% for friend_request in received_requests %}
+            <p>{{ friend_request.from_user.username }} wants to be friends</p>
+            <a href="{% url 'accept_friend_request' friend_request.id %}">Accept</a>
+        {% endfor %}
+    {% else %}
+        {% if profile.user.profile in request.user.profile.friends.all %}
+            <p>You are friends</p>
+        {% else %}
+            <form method="post" action="{% url 'send_friend_request' profile.user.username %}">
+                {% csrf_token %}
+                <button type="submit">Send Friend Request</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+    <h2>Posts</h2>
+    {% for post in posts %}
+        <div>
+            <p>{{ post.content }}</p>
+            <small>{{ post.created_at }}</small>
+            <p>Likes: {{ post.total_likes }}</p>
+            <a href="{% url 'like_post' post.id %}">
+                {% if request.user in post.likes.all %}
+                    Unlike
+                {% else %}
+                    Like
+                {% endif %}
+            </a>
+
+            <h3>Comments</h3>
+            {% for comment in post.comments.all %}
+                <p>{{ comment.user.username }}: {{ comment.content }}</p>
+            {% endfor %}
+
+            <form method="post" action="{% url 'add_comment' post.id %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit">Add Comment</button>
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}
