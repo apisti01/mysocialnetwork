@@ -16,6 +16,15 @@ def home(request):
         return redirect('login')
 
 
+@login_required
+def followed_feed(request):
+    friends = request.user.profile.friends.all()
+    posts = Post.objects.filter(author__profile__in=friends).order_by('-created_at')
+    comment_form = CommentForm()
+    post_form = PostForm()
+    return render(request, 'network/followed_feed.html', {'posts': posts, 'comment_form': comment_form, 'post_form': post_form})
+
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)

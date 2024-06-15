@@ -1,0 +1,39 @@
+{% extends 'network/base_generic.html' %}
+
+{% block content %}
+    <h1>Followed Feed</h1>
+
+    <h2>Create a new post</h2>
+    <form method="post" action="{% url 'create_post' %}">
+        {% csrf_token %}
+        {{ post_form.as_p }}
+        <button type="submit">Post</button>
+    </form>
+
+    {% for post in posts %}
+        <div>
+            <h2><a href="{% url 'profile' post.author.username %}">{{ post.author.username }}</a></h2>
+            <p>{{ post.content }}</p>
+            <small>{{ post.created_at }}</small>
+            <p>Likes: {{ post.total_likes }}</p>
+            <a href="{% url 'like_post' post.id %}">
+                {% if request.user in post.likes.all %}
+                    Unlike
+                {% else %}
+                    Like
+                {% endif %}
+            </a>
+
+            <h3>Comments</h3>
+            {% for comment in post.comments.all %}
+                <p>{{ comment.user.username }}: {{ comment.content }}</p>
+            {% endfor %}
+
+            <form method="post" action="{% url 'add_comment' post.id %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit">Add Comment</button>
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}
