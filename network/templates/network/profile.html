@@ -1,61 +1,71 @@
 {% extends 'network/base_generic.html' %}
 
 {% block content %}
-    <h1>{{ profile.user.username }}'s Profile</h1>
-    <img src="{{ profile.image.url }}" alt="{{ profile.user.username }}'s profile picture"
-         style="width:150px; height:150px;">
-    <p>{{ profile.bio }}</p>
-    <p>{{ profile.location }}</p>
-    <p>{{ profile.birth_date }}</p>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>{{ profile.user.username }}'s Profile</h1>
+                <img src="{{ profile.image.url }}" alt="{{ profile.user.username }}'s profile picture" class="img-thumbnail mb-3" style="width:150px; height:150px;">
+                <p><strong>Bio:</strong> {{ profile.bio }}</p>
+                <p><strong>Location:</strong> {{ profile.location }}</p>
+                <p><strong>Birth Date:</strong> {{ profile.birth_date }}</p>
 
-    {% if is_own_profile %}
-        <h2>Update Profile</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Update</button>
-        </form>
+                {% if is_own_profile %}
+                    <h2>Update Profile</h2>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary mt-2">Update</button>
+                    </form>
 
-        <h2>Friend Requests</h2>
-        {% for friend_request in received_requests %}
-            <p>{{ friend_request.from_user.username }} wants to be friends</p>
-            <a href="{% url 'accept_friend_request' friend_request.id %}">Accept</a>
-        {% endfor %}
-    {% else %}
-        {% if profile.user.profile in request.user.profile.friends.all %}
-            <p>You are friends</p>
-        {% else %}
-            <form method="post" action="{% url 'send_friend_request' profile.user.username %}">
-                {% csrf_token %}
-                <button type="submit">Send Friend Request</button>
-            </form>
-        {% endif %}
-    {% endif %}
-
-    <h2>Posts</h2>
-    {% for post in posts %}
-        <div>
-            <p>{{ post.content }}</p>
-            <small>{{ post.created_at }}</small>
-            <p>Likes: {{ post.total_likes }}</p>
-            <a href="{% url 'like_post' post.id %}">
-                {% if request.user in post.likes.all %}
-                    Unlike
+                    <h2 class="mt-4">Friend Requests</h2>
+                    {% for friend_request in received_requests %}
+                        <div class="alert alert-info">
+                            <p>{{ friend_request.from_user.username }} wants to be friends</p>
+                            <a href="{% url 'accept_friend_request' friend_request.id %}" class="btn btn-success btn-sm">Accept</a>
+                        </div>
+                    {% endfor %}
                 {% else %}
-                    Like
+                    {% if profile.user.profile in request.user.profile.friends.all %}
+                        <div class="alert alert-success">You are friends</div>
+                    {% else %}
+                        <form method="post" action="{% url 'send_friend_request' profile.user.username %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Send Friend Request</button>
+                        </form>
+                    {% endif %}
                 {% endif %}
-            </a>
-
-            <h3>Comments</h3>
-            {% for comment in post.comments.all %}
-                <p>{{ comment.user.username }}: {{ comment.content }}</p>
-            {% endfor %}
-
-            <form method="post" action="{% url 'add_comment' post.id %}">
-                {% csrf_token %}
-                {{ comment_form.as_p }}
-                <button type="submit">Add Comment</button>
-            </form>
+            </div>
+            <div class="col-md-8">
+                <h2>Posts</h2>
+                {% for post in posts %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p>{{ post.content }}</p>
+                            <small class="text-muted">{{ post.created_at }}</small>
+                            <p>Likes: {{ post.total_likes }}</p>
+                            <a href="{% url 'like_post' post.id %}" class="btn btn-link">
+                                {% if request.user in post.likes.all %}
+                                    Unlike
+                                {% else %}
+                                    Like
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="card-footer">
+                            <h3>Comments</h3>
+                            {% for comment in post.comments.all %}
+                                <p><strong>{{ comment.user.username }}:</strong> {{ comment.content }}</p>
+                            {% endfor %}
+                            <form method="post" action="{% url 'add_comment' post.id %}">
+                                {% csrf_token %}
+                                {{ comment_form.as_p }}
+                                <button type="submit" class="btn btn-secondary btn-sm mt-2">Add Comment</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    {% endfor %}
+    </div>
 {% endblock %}
