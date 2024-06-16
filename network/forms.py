@@ -23,6 +23,8 @@ class FriendRequestForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20}), label='add a comment:')
+
     class Meta:
         model = Comment
         fields = ['content']

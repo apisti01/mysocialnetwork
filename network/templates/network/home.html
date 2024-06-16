@@ -1,6 +1,5 @@
 {% extends 'network/base_generic.html' %}
 
-
 {% block content %}
   <h1>News Feed</h1>
 
@@ -12,7 +11,7 @@
   </form>
 
   {% for post in posts %}
-    <div>
+    <div class="post">
       <h2><a href="{% url 'profile' post.author.username %}">{{ post.author.username }}</a></h2>
       <p>{{ post.content }}</p>
       <small>{{ post.created_at }}</small>
