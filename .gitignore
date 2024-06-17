@@ -30,3 +30,4 @@ env/
 
 # Secrets
 .env
+/media/profile_pics/
