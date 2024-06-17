@@ -18,7 +18,7 @@ staticfiles/
 *.sqlite3
 
 # Media files
-media/
+#media/
 
 # Virtual environment
 venv/
