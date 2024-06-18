@@ -1,6 +1,9 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.urls import is_valid_path
+
 from .models import Profile, Post, FriendRequest, Comment, User
 from .forms import ProfileForm, PostForm, FriendRequestForm, CommentForm
 from django.contrib.auth.decorators import login_required
@@ -46,6 +49,7 @@ def profile(request, username):
     is_own_profile = user == request.user
     sent_requests = FriendRequest.objects.filter(from_user=request.user)
     received_requests = FriendRequest.objects.filter(to_user=request.user)
+    comment_form = CommentForm()
 
     if is_own_profile:
         if request.method == 'POST':
@@ -64,7 +68,8 @@ def profile(request, username):
         'form': form,
         'is_own_profile': is_own_profile,
         'sent_requests': sent_requests,
-        'received_requests': received_requests
+        'received_requests': received_requests,
+        'comment_form': comment_form,
     })
 
 
@@ -106,7 +111,10 @@ def like_post(request, post_id):
         post.likes.remove(request.user)
     else:
         post.likes.add(request.user)
-    return redirect('home')
+    # Get the URL of the previous page
+    previous_page = request.META.get('HTTP_REFERER')
+    # Redirect to the previous page
+    return redirect(previous_page)
 
 
 @login_required
@@ -119,4 +127,18 @@ def add_comment(request, post_id):
             comment.user = request.user
             comment.post = post
             comment.save()
-    return redirect('home')
+
+    # Get the URL of the previous page
+    previous_page = request.META.get('HTTP_REFERER')
+    # Redirect to the previous page
+    return redirect(previous_page)
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user == post.author:
+        post.delete()
+        return redirect('profile', username=request.user.username)
+    else:
+        return HttpResponseForbidden("You are not allowed to delete this post.")

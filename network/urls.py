@@ -11,4 +11,5 @@ urlpatterns = [
     path('accept_friend_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
     path('like_post/<int:post_id>/', views.like_post, name='like_post'),
     path('add_comment/<int:post_id>/', views.add_comment, name='add_comment'),
+    path('post/<int:post_id>/delete/', views.delete_post, name='delete_post'),
 ]
