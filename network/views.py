@@ -14,7 +14,8 @@ def home(request):
         posts = Post.objects.all().order_by('-created_at')
         comment_form = CommentForm()
         post_form = PostForm()
-        return render(request, 'network/home.html', {'posts': posts, 'comment_form': comment_form, 'post_form': post_form})
+        return render(request, 'network/home.html',
+                      {'posts': posts, 'comment_form': comment_form, 'post_form': post_form})
     else:
         return redirect('login')
 
@@ -25,7 +26,8 @@ def followed_feed(request):
     posts = Post.objects.filter(author__profile__in=friends).order_by('-created_at')
     comment_form = CommentForm()
     post_form = PostForm()
-    return render(request, 'network/followed_feed.html', {'posts': posts, 'comment_form': comment_form, 'post_form': post_form})
+    return render(request, 'network/followed_feed.html',
+                  {'posts': posts, 'comment_form': comment_form, 'post_form': post_form})
 
 
 def register(request):
@@ -84,7 +86,6 @@ def create_post(request):
     else:
         form = PostForm()
     return render(request, 'network/create_post.html', {'form': form})
-
 
 
 @login_required

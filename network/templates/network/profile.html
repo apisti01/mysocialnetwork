@@ -5,7 +5,8 @@
         <div class="row">
             <div class="col-md-4">
                 <h1>{{ profile.user.username }}'s Profile</h1>
-                <img src="{{ profile.image.url }}" alt="{{ profile.user.username }}'s profile picture" class="img-thumbnail mb-3" style="width:150px; height:150px;">
+                <img src="{{ profile.image.url }}" alt="{{ profile.user.username }}'s profile picture"
+                     class="img-thumbnail mb-3" style="width:150px; height:150px;">
                 <p><strong>Bio:</strong> {{ profile.bio }}</p>
                 <p><strong>Location:</strong> {{ profile.location }}</p>
                 <p><strong>Birth Date:</strong> {{ profile.birth_date }}</p>
@@ -22,7 +23,8 @@
                     {% for friend_request in received_requests %}
                         <div class="alert alert-info">
                             <p>{{ friend_request.from_user.username }} wants to be friends</p>
-                            <a href="{% url 'accept_friend_request' friend_request.id %}" class="btn btn-success btn-sm">Accept</a>
+                            <a href="{% url 'accept_friend_request' friend_request.id %}"
+                               class="btn btn-success btn-sm">Accept</a>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -55,7 +57,10 @@
                             {% if is_own_profile %}
                                 <form action="{% url 'delete_post' post.id %}" method="post" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this post?');">Delete Post</button>
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete this post?');">
+                                        Delete Post
+                                    </button>
                                 </form>
                             {% endif %}
                         </div>
