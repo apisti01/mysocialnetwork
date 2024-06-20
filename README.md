@@ -7,7 +7,7 @@ Created as a project for the course PPM at University of Florence.
 
 - **User Registration and Authentication**: Users can register and log in to the platform.
 - **User Profiles**: Users can create and update their profiles, including profile pictures.
-- **Friend Requests**: Users can send and accept friend requests.
+- **Friend Requests**: Users can send and accept friend requests through their profile page.
 - **Posts**: Users can create, delete, and view posts.
 - **Likes and Comments**: Users can like and comment on posts.
 - **News Feed**: Users can see a feed of all posts and a separate feed of posts from friends.
@@ -41,7 +41,7 @@ Created as a project for the course PPM at University of Florence.
    ```sh
    SECRET_KEY=your_secret_key
    DEBUG=True
-   '''
+    ```
 
 6. **Run migrations:**
 
